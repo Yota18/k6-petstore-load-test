@@ -1,0 +1,88 @@
+import { useState, useEffect } from 'react';
+import type { K6Data, DetailedMetrics } from '../types/k6.types';
+import { parseK6Data } from '../utils/k6Parser';
+
+export interface TestHistory {
+    id: number;
+    timestamp: string;
+    performance: K6Data | null;
+    stress: K6Data | null;
+}
+
+export function useK6Data() {
+    const [performanceData, setPerformanceData] = useState<K6Data | null>(null);
+    const [stressData, setStressData] = useState<K6Data | null>(null);
+    const [adaptiveStressData, setAdaptiveStressData] = useState<K6Data | null>(null);
+    const [history, setHistory] = useState<TestHistory[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                // Fetch current K6 raw data
+                const [perfRes, stressRes, adaptiveRes, historyRes] = await Promise.all([
+                    fetch('/data/performance-data.json').catch(() => null),
+                    fetch('/data/stress-data.json').catch(() => null),
+                    fetch('/data/adaptive-stress-data.json').catch(() => null),
+                    fetch('/data/history.json').catch(() => null),
+                ]);
+
+                if (perfRes?.ok) {
+                    const data = await perfRes.json();
+                    setPerformanceData(data);
+                }
+
+                if (stressRes?.ok) {
+                    const data = await stressRes.json();
+                    setStressData(data);
+                }
+
+                if (adaptiveRes?.ok) {
+                    const data = await adaptiveRes.json();
+                    setAdaptiveStressData(data);
+                }
+
+                if (historyRes?.ok) {
+                    const data = await historyRes.json();
+                    setHistory(data);
+                }
+
+                if (!perfRes?.ok && !stressRes?.ok && !adaptiveRes?.ok) {
+                    setError('No test data found. Please run tests first.');
+                }
+            } catch (e) {
+                console.error('Failed to load test data:', e);
+                setError('Failed to load test data');
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchData();
+    }, []);
+
+    // Compute derived metrics
+    const performanceMetrics: DetailedMetrics | null = performanceData
+        ? parseK6Data(performanceData)
+        : null;
+
+    const stressMetrics: DetailedMetrics | null = stressData
+        ? parseK6Data(stressData)
+        : null;
+
+    const adaptiveStressMetrics: DetailedMetrics | null = adaptiveStressData
+        ? parseK6Data(adaptiveStressData)
+        : null;
+
+    return {
+        performanceData,
+        stressData,
+        adaptiveStressData,
+        performanceMetrics,
+        stressMetrics,
+        adaptiveStressMetrics,
+        history,
+        loading,
+        error,
+    };
+}

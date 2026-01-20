@@ -1,0 +1,41 @@
+stages:
+  - build
+  - test
+
+build:
+  image: node:18
+  stage: build
+  script:
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 hour
+
+functional_test:
+  image: grafana/k6:latest
+  stage: test
+  dependencies:
+    - build
+  script:
+    - k6 run dist/performance.js
+  artifacts:
+    when: always
+    paths:
+      - dashboard.html
+    expire_in: 1 week
+
+stress_test:
+  image: grafana/k6:latest
+  stage: test
+  dependencies:
+    - build
+  script:
+    - k6 run dist/stress.js
+  allow_failure: true
+  artifacts:
+    when: always
+    paths:
+      - stress-report.html
+    expire_in: 1 week

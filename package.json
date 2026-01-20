@@ -1,0 +1,55 @@
+{
+  "name": "k6-petstore-performance",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Performance testing framework for Petstore API using K6 and TypeScript with React Dashboard",
+  "main": "dist/tests/performance.js",
+  "scripts": {
+    "build:tests": "vite build --config tests/vite.config.ts",
+    "build:dashboard": "vite build --config dashboard/vite.config.ts",
+    "build": "npm run build:tests && npm run build:dashboard",
+    "test": "k6 run dist/tests/performance.js",
+    "test:stress": "k6 run dist/tests/stress.js",
+    "test:unit": "jest",
+    "test:coverage": "jest --coverage",
+    "process-data": "node shared/scripts/process-results.js",
+    "dashboard:serve": "npx serve dist/dashboard",
+    "test:all": "npm run build && (npm test || true) && (npm run test:stress || true) && npm run process-data",
+    "type-check": "tsc --noEmit",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "tsc --noEmit"
+    ]
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@jest/globals": "^30.2.0",
+    "@types/jest": "^30.0.0",
+    "@types/k6": "^0.54.0",
+    "@types/node": "^25.0.9",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@vitejs/plugin-react": "^5.1.2",
+    "autoprefixer": "^10.4.16",
+    "glob": "^10.3.10",
+    "husky": "^9.1.7",
+    "jest": "^30.2.0",
+    "lint-staged": "^16.2.7",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.2.2",
+    "vite": "^7.3.1"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.1",
+    "dotenv": "^17.2.3",
+    "lucide-react": "^0.309.0",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
