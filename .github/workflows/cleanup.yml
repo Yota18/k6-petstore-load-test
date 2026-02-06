@@ -1,0 +1,23 @@
+name: Cleanup Old Runs
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *' # Run daily at midnight
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  delete-runs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete Old Workflow Runs
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 0   # Delete immediately if older than...
+          keep_minimum_runs: 5 # Keep last 5 runs per workflow
+          delete_workflow_pattern: "K6 Load Test" # Target specific workflow
