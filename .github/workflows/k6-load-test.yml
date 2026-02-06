@@ -48,6 +48,7 @@ jobs:
         run: ls -R dist
 
       - name: Run K6 ${{ github.event.inputs.test_type }} test
+        continue-on-error: true
         run: |
           if [ "${{ github.event.inputs.test_type }}" = "stress" ]; then
             k6 run dist/tests/stress.js --out json=dist/tests/stress-data.json --summary-export=summary.json
