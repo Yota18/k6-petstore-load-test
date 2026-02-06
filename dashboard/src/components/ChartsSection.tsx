@@ -132,7 +132,12 @@ export function ChartsSection({ metrics, history, type }: ChartsSectionProps) {
                 </h3>
                 <div className="h-64 flex items-center justify-center">
                     <div className="w-48 h-48">
-                        <Doughnut data={passFailData} options={doughnutOptions} />
+                        <Doughnut
+                            // Add key to force re-mount on type change -> triggering animation again
+                            key={type}
+                            data={passFailData}
+                            options={doughnutOptions}
+                        />
                     </div>
                 </div>
             </div>
