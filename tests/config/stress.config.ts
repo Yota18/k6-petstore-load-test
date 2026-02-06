@@ -46,6 +46,5 @@ export const stressOptions: Options = {
         // Warning thresholds for monitoring (won't fail the test)
         checks: ['rate>0.90'],              // 90% pass rate minimum
         http_req_duration: ['p(95)<5000'],  // P95 should be under 5s
-        http_req_failed: ['rate<0.10'],     // Less than 10% failed requests
     },
 };

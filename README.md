@@ -229,14 +229,6 @@ This project includes a comprehensive `.gitlab-ci.yml` pipeline:
 3. **Stress Stage**: Runs chaos tests (allowed to fail) with artifact retention
 4. **Dashboard Stage**: Builds and deploys React dashboard
 
-## 🐞 Bug Reports
-
-During framework development, several bugs were discovered in the Petstore API:
-- **Security Flaws**: 200 OK on invalid login credentials
-- **Validation Issues**: 200 OK on empty/invalid orders
-
-
-
 ---
 
 ## 💡 "Critical Path" Explanation (80/20 Rule)
