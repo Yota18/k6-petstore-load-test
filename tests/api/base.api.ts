@@ -1,5 +1,5 @@
 import http, { Response } from 'k6/http';
-import { config } from '../config/config';
+import { config } from '../config/performance.config';
 
 export class BaseApi {
     protected endpoint: string;
