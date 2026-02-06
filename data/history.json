@@ -125,5 +125,34 @@
       "passRate": 0,
       "status": "Breaking Point Found"
     }
+  },
+  {
+    "id": 1770387141121,
+    "timestamp": "2026-02-06T14:12:21.121Z",
+    "performance": {
+      "totalRequests": 700,
+      "p95": 52.121400449999996,
+      "vus": 3,
+      "passRate": 0,
+      "health": "Healthy"
+    },
+    "stress": null,
+    "adaptiveStress": {
+      "maxVus": 30,
+      "maxStableVUs": 200,
+      "breakingPoint": {
+        "detected": true,
+        "reason": "High Error Rate",
+        "vus": 30,
+        "errorRate": 20,
+        "p95": 52.0249068
+      },
+      "p95": 52.0249068,
+      "errorRate": 20,
+      "totalRequests": 13440,
+      "failedRequests": 2688,
+      "passRate": 0,
+      "status": "Breaking Point Found"
+    }
   }
 ]
