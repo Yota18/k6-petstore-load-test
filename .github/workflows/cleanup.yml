@@ -21,3 +21,12 @@ jobs:
           retain_days: 0   # Delete immediately if older than...
           keep_minimum_runs: 5 # Keep last 5 runs per workflow
           delete_workflow_pattern: "K6 Load Test" # Target specific workflow
+
+      - name: Delete Pages Deployment Runs
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 5
+          delete_workflow_pattern: "pages-build-deployment"
