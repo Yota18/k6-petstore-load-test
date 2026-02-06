@@ -11,5 +11,18 @@
     },
     "stress": null,
     "adaptiveStress": null
+  },
+  {
+    "id": 1770377894192,
+    "timestamp": "2026-02-06T11:38:14.192Z",
+    "performance": {
+      "totalRequests": 800,
+      "p95": 23.96155225,
+      "vus": 2,
+      "passRate": 0,
+      "health": "Healthy"
+    },
+    "stress": null,
+    "adaptiveStress": null
   }
 ]
