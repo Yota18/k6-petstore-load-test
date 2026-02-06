@@ -22,10 +22,9 @@ export function useK6Data() {
             try {
                 // Fetch current K6 raw data using correct base path
                 const basePath = import.meta.env.BASE_URL;
-                const [perfRes, stressRes, adaptiveRes, historyRes] = await Promise.all([
+                const [perfRes, stressRes, historyRes] = await Promise.all([
                     fetch(`${basePath}data/performance-data.json`).catch(() => null),
                     fetch(`${basePath}data/stress-data.json`).catch(() => null),
-                    fetch(`${basePath}data/adaptive-stress-data.json`).catch(() => null),
                     fetch(`${basePath}data/history.json`).catch(() => null),
                 ]);
 
@@ -39,17 +38,12 @@ export function useK6Data() {
                     setStressData(data);
                 }
 
-                if (adaptiveRes?.ok) {
-                    const data = await adaptiveRes.json();
-                    setAdaptiveStressData(data);
-                }
-
                 if (historyRes?.ok) {
                     const data = await historyRes.json();
                     setHistory(data);
                 }
 
-                if (!perfRes?.ok && !stressRes?.ok && !adaptiveRes?.ok) {
+                if (!perfRes?.ok && !stressRes?.ok) {
                     setError('No test data found. Please run tests first.');
                 }
             } catch (e) {

@@ -76,7 +76,7 @@ function App() {
                             disabled={!performanceData}
                         >
                             <TrendingUp className="inline h-5 w-5 mr-2" />
-                            Functional Performance
+                            Performance Test
                         </button>
                         <button
                             onClick={() => setActiveTab('stress')}
@@ -91,20 +91,6 @@ function App() {
                         >
                             <AlertTriangle className="inline h-5 w-5 mr-2" />
                             Stress Test
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('adaptive')}
-                            className={`
-                                whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
-                                ${activeTab === 'adaptive'
-                                    ? 'border-indigo-500 text-indigo-600'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                }
-                            `}
-                            disabled={!adaptiveStressData}
-                        >
-                            <Activity className="inline h-5 w-5 mr-2" />
-                            Adaptive Stress (Breaking Point)
                         </button>
                     </nav>
                 </div>
