@@ -50,9 +50,9 @@ jobs:
       - name: Run K6 ${{ github.event.inputs.test_type }} test
         run: |
           if [ "${{ github.event.inputs.test_type }}" = "stress" ]; then
-            k6 run dist/tests/stress.js --out json=dist/tests/stress-data.json --summary-export=summary.json
+            k6 run dist/tests/stress.js --summary-export=summary.json
           else
-            k6 run dist/tests/performance.js --out json=dist/tests/performance-data.json --summary-export=summary.json
+            k6 run dist/tests/performance.js --summary-export=summary.json
           fi
 
       - name: Process test results for dashboard

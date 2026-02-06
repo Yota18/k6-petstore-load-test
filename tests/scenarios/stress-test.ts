@@ -10,7 +10,7 @@ export function handleSummary(data: any) {
     return generateSummary(data, {
         title: 'Adaptive Stress Test - Breaking Point Discovery 🔥',
         filename: 'stress-report.html',  // Consistent with performance test naming
-        jsonFilename: 'dist/adaptive-stress-data.json'  // Changed from stress-data.json
+        jsonFilename: 'dist/tests/adaptive-stress-data.json'  // Changed from stress-data.json
     });
 }
 

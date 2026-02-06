@@ -1,5 +1,5 @@
 import { Options } from 'k6/options';
-import { config } from '../config/config';
+import { config } from '../config/performance.config';
 import { generateSummary } from '../utils/reporter';
 import { criticalWorkflow } from '../workflows/critical.workflow';
 
@@ -14,5 +14,5 @@ export default function () {
 }
 
 export function handleSummary(data: any) {
-    return generateSummary(data, { title: 'Functional Performance Report', filename: 'dashboard.html', jsonFilename: 'dist/performance-data.json' });
+    return generateSummary(data, { title: 'Functional Performance Report', filename: 'dashboard.html', jsonFilename: 'dist/tests/performance-data.json' });
 }
