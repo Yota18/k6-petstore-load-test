@@ -90,6 +90,21 @@ export function ChartsSection({ metrics, history, type }: ChartsSectionProps) {
         },
     };
 
+    const doughnutOptions = {
+        ...chartOptions,
+        animation: {
+            animateScale: true,
+            animateRotate: true,
+            duration: 2000,
+            easing: 'easeOutQuart' as const,
+        },
+        plugins: {
+            legend: {
+                position: 'bottom' as const,
+            },
+        },
+    };
+
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
             <div className="bg-white shadow rounded-lg p-6">
@@ -116,7 +131,7 @@ export function ChartsSection({ metrics, history, type }: ChartsSectionProps) {
                 </h3>
                 <div className="h-64 flex items-center justify-center">
                     <div className="w-48 h-48">
-                        <Doughnut data={passFailData} options={{ ...chartOptions, plugins: { legend: { position: 'bottom' } } }} />
+                        <Doughnut data={passFailData} options={doughnutOptions} />
                     </div>
                 </div>
             </div>
