@@ -9,9 +9,9 @@ on:
         default: 'performance'
         type: choice
         options:
+          - all
           - performance
           - stress
-          - all
 
 permissions:
   contents: write
