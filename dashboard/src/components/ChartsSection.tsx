@@ -102,6 +102,12 @@ export function ChartsSection({ metrics, history, type }: ChartsSectionProps) {
         plugins: {
             legend: {
                 position: 'bottom' as const,
+                align: 'center' as const,
+                labels: {
+                    padding: 15,
+                    boxWidth: 15,
+                    usePointStyle: true,
+                },
             },
         },
     }), [chartOptions]);
@@ -133,7 +139,6 @@ export function ChartsSection({ metrics, history, type }: ChartsSectionProps) {
                 <div className="h-64 flex items-center justify-center">
                     <div className="w-48 h-48">
                         <Doughnut
-                            // Add key to force re-mount on type change -> triggering animation again
                             key={type}
                             data={passFailData}
                             options={doughnutOptions}
