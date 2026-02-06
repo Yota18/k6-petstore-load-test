@@ -12,6 +12,9 @@ on:
           - performance
           - stress
 
+permissions:
+  contents: write
+
 jobs:
   k6-test:
     runs-on: ubuntu-latest
@@ -35,28 +38,50 @@ jobs:
       - name: Setup K6
         uses: grafana/setup-k6-action@v1
 
+      - name: Restore history from gh-pages
+        run: |
+          git fetch origin gh-pages:gh-pages || echo "No gh-pages branch found"
+          mkdir -p dashboard/public/data
+          git show gh-pages:data/history.json > dashboard/public/data/history.json || echo "No history.json found"
+
       - name: Run K6 ${{ github.event.inputs.test_type }} test
         run: |
           if [ "${{ github.event.inputs.test_type }}" = "stress" ]; then
-            k6 run dist/tests/stress.js --out json=results.json --summary-export=summary.json || true
+            k6 run dist/tests/stress.js --out json=dist/tests/stress-data.json --summary-export=summary.json || true
           else
-            k6 run dist/tests/performance.js --out json=results.json --summary-export=summary.json || true
+            k6 run dist/tests/performance.js --out json=dist/tests/performance-data.json --summary-export=summary.json || true
           fi
 
-      - name: Upload test results
+      - name: Process test results for dashboard
+        run: npm run process-data
+
+      - name: Build Dashboard
+        run: npm run build:dashboard
+
+      - name: Upload test results artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: k6-results-${{ github.event.inputs.test_type }}-${{ github.run_number }}
           path: |
-            results.json
+            dist/tests/*-data.json
             summary.json
+            dashboard/public/data/history.json
           retention-days: 30
+
+      - name: Deploy Dashboard to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/dashboard
+          keep_files: true
 
       - name: Display test summary
         if: always()
         run: |
           echo "## K6 Load Test Results - ${{ github.event.inputs.test_type }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📊 **Dashboard:** https://yota18.github.io/k6-petstore-load-test/" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ -f summary.json ]; then
             echo "### Metrics Summary" >> $GITHUB_STEP_SUMMARY
