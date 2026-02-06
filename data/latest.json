@@ -1,23 +1,13 @@
 {
-  "id": 1770380661651,
-  "timestamp": "2026-02-06T12:24:21.651Z",
-  "performance": null,
-  "stress": null,
-  "adaptiveStress": {
-    "maxVus": 30,
-    "maxStableVUs": 200,
-    "breakingPoint": {
-      "detected": true,
-      "reason": "High Error Rate",
-      "vus": 30,
-      "errorRate": 20,
-      "p95": 9.65648415
-    },
-    "p95": 9.65648415,
-    "errorRate": 20,
-    "totalRequests": 14820,
-    "failedRequests": 2964,
+  "id": 1770380805314,
+  "timestamp": "2026-02-06T12:26:45.314Z",
+  "performance": {
+    "totalRequests": 800,
+    "p95": 7.025299649999999,
+    "vus": 10,
     "passRate": 0,
-    "status": "Breaking Point Found"
-  }
+    "health": "Healthy"
+  },
+  "stress": null,
+  "adaptiveStress": null
 }
