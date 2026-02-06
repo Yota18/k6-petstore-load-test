@@ -6,7 +6,7 @@ on:
       test_type:
         description: 'Type of load test to run'
         required: true
-        default: 'performance'
+        default: 'all'
         type: choice
         options:
           - all
