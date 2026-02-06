@@ -6,38 +6,20 @@ export const stressOptions: Options = {
             executor: 'ramping-vus',
             startVUs: 0,
             stages: [
-                // Phase 1: Baseline Stress Test (Original)
-                { duration: '1m', target: 10 },   // 1. Warm-up
-                { duration: '2m', target: 200 },  // 2. Ramp-up to baseline
-                { duration: '2m', target: 200 },  // 3. Hold baseline (verify stability)
+                // Phase 1: Ramp to 200 (Modified to 250 as per request)
+                { duration: '1m', target: 250 },   // Ramp-up to 250
+                { duration: '1m', target: 250 },   // Istirahat / Hold 1 minute
 
-                // Phase 2: Adaptive Incremental Testing (Breaking Point Discovery)
-                // Increment 1 - 250 VUs (+50)
-                { duration: '30s', target: 250 },
-                { duration: '1m', target: 250 },  // Hold
+                // Phase 2: Ramp to 500
+                { duration: '1m', target: 500 },   // Ramp-up to 500
+                { duration: '1m', target: 500 },   // Istirahat / Hold 1 minute (Peak Load)
 
-                // Increment 2 - 300 VUs (+50)
-                { duration: '30s', target: 300 },
-                { duration: '1m', target: 300 },  // Hold
+                // Phase 3: Ramp down to 250 (Recovery Test)
+                { duration: '1m', target: 250 },   // Ramp-down 500 -> 250
+                { duration: '1m', target: 250 },   // Istirahat / Hold 1 minute (Verify Recovery)
 
-                // Increment 3 - 350 VUs (+50)
-                { duration: '30s', target: 350 },
-                { duration: '1m', target: 350 },  // Hold
-
-                // Increment 4 - 400 VUs (+50)
-                { duration: '30s', target: 400 },
-                { duration: '1m', target: 400 },  // Hold
-
-                // Increment 5 - 450 VUs (+50)
-                { duration: '30s', target: 450 },
-                { duration: '1m', target: 450 },  // Hold
-
-                // Increment 6 - 500 VUs (+50)
-                { duration: '30s', target: 500 },
-                { duration: '1m', target: 500 },  // Hold
-
-                // Cool-down
-                { duration: '1m', target: 0 },
+                // Phase 4: Cool-down
+                { duration: '1m', target: 0 },     // Ramp-down 250 -> 0
             ],
             gracefulRampDown: '30s',
         },
