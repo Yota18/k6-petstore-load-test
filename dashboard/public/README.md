@@ -7,7 +7,7 @@ This branch (`gh-pages`) hosts the **Performance Dashboard Website** for the Loa
 This dashboard is the final visualization layer of our Automated Performance Testing pipeline.
 
 1.  **Trigger**: Engineer triggers "K6 Load Test" or "Run All" in GitHub Actions.
-2.  **Execution**: System simulates up to 30-500 VUs hitting the Petstore API.
+2.  **Execution**: System simulates **10-30 VUs** (Configurable up to 500) hitting the Petstore API.
 3.  **Data Processing**: 
     - Test results (Pass/Fail, Latency) are converted to JSON.
     - Historical data is fetched from this branch (`history.json`).
