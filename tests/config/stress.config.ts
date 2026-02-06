@@ -2,7 +2,7 @@ import { Options } from 'k6/options';
 
 export const stressOptions: Options = {
     scenarios: {
-        adaptive_stress: {
+        stress_flow: {
             executor: 'ramping-vus',
             startVUs: 0,
             stages: [

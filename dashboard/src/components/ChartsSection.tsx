@@ -29,7 +29,7 @@ ChartJS.register(
 interface ChartsSectionProps {
     metrics: DetailedMetrics;
     history: TestHistory[];
-    type: 'performance' | 'stress' | 'adaptive';
+    type: 'performance' | 'stress';
 }
 
 export function ChartsSection({ metrics, history, type }: ChartsSectionProps) {

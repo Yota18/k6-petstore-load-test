@@ -12,7 +12,6 @@ export interface TestHistory {
 export function useK6Data() {
     const [performanceData, setPerformanceData] = useState<K6Data | null>(null);
     const [stressData, setStressData] = useState<K6Data | null>(null);
-    const [adaptiveStressData, setAdaptiveStressData] = useState<K6Data | null>(null);
     const [history, setHistory] = useState<TestHistory[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

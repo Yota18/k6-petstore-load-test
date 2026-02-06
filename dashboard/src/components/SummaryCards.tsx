@@ -4,7 +4,7 @@ import { formatDuration, formatPercentage, formatNumber } from '../utils/formatt
 
 interface SummaryCardsProps {
     metrics: DetailedMetrics;
-    type: 'performance' | 'stress' | 'adaptive';
+    type: 'performance' | 'stress';
 }
 
 export function SummaryCards({ metrics, type }: SummaryCardsProps) {

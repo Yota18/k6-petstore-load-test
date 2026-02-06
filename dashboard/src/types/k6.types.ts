@@ -62,7 +62,6 @@ export interface ProcessedTestRun {
     timestamp: string;
     performance: PerformanceMetrics | null;
     stress: StressMetrics | null;
-    adaptiveStress: AdaptiveStressMetrics | null;
 }
 
 export interface PerformanceMetrics {
@@ -77,26 +76,6 @@ export interface StressMetrics {
     maxVus: number;
     p95: number;
     status: 'Stable' | 'Breaking Point Reached';
-}
-
-export interface BreakingPoint {
-    detected: boolean;
-    reason: string;
-    vus: number;
-    errorRate: number;
-    p95: number;
-}
-
-export interface AdaptiveStressMetrics {
-    maxVus: number;
-    maxStableVUs: number;
-    breakingPoint: BreakingPoint;
-    p95: number;
-    errorRate: number;
-    totalRequests: number;
-    failedRequests: number;
-    passRate: number;
-    status: string;
 }
 
 // Enhanced metrics for detailed view

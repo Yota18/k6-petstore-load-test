@@ -32,9 +32,8 @@ function readJson(filename) {
 // 1. Read Raw Data
 const perfData = readJson('performance-data.json');
 const stressData = readJson('stress-data.json');
-const adaptiveStressData = readJson('adaptive-stress-data.json');
 
-if (!perfData && !stressData && !adaptiveStressData) {
+if (!perfData && !stressData) {
     console.error('❌ No test data found. Please run tests first.');
     process.exit(1);
 }
@@ -47,8 +46,7 @@ const processedResult = {
     id: runId,
     timestamp: timestamp,
     performance: null,
-    stress: null,
-    adaptiveStress: null
+    stress: null
 };
 
 if (perfData) {
@@ -74,65 +72,6 @@ if (stressData) {
         maxVus: 200, // Hardcoded config value or metrics.vus_max.values.value
         p95: metrics.http_req_duration.values['p(95)'],
         status: checks.fails > 0 ? 'Breaking Point Reached' : 'Stable'
-    };
-}
-
-if (adaptiveStressData) {
-    const checks = adaptiveStressData.root_group.checks;
-    const metrics = adaptiveStressData.metrics;
-
-    // Calculate error rate
-    const totalRequests = metrics.http_reqs.values.count;
-    const failedRequests = metrics.http_req_failed ? metrics.http_req_failed.values.passes : 0;
-    const errorRate = totalRequests > 0 ? (failedRequests / totalRequests) * 100 : 0;
-
-    // Get P95 latency
-    const p95 = metrics.http_req_duration.values['p(95)'];
-
-    // Get max VUs reached
-    const maxVus = metrics.vus_max ? metrics.vus_max.values.value : 500;
-
-    // Breaking point detection logic
-    // Breaking point is when error rate > 10% OR P95 > 5000ms
-    const ERROR_THRESHOLD = 10; // 10%
-    const LATENCY_THRESHOLD = 5000; // 5 seconds
-
-    let breakingPoint = null;
-    let maxStableVUs = maxVus;
-
-    if (errorRate > ERROR_THRESHOLD || p95 > LATENCY_THRESHOLD) {
-        breakingPoint = {
-            detected: true,
-            reason: errorRate > ERROR_THRESHOLD ? 'High Error Rate' : 'High Latency',
-            vus: maxVus,
-            errorRate: errorRate,
-            p95: p95
-        };
-        // Estimate stable VUs (assume previous increment was stable)
-        maxStableVUs = Math.max(200, maxVus - 50);
-    } else {
-        breakingPoint = {
-            detected: false,
-            reason: 'System Stable',
-            vus: maxVus,
-            errorRate: errorRate,
-            p95: p95
-        };
-        maxStableVUs = maxVus;
-    }
-
-    processedResult.adaptiveStress = {
-        maxVus: maxVus,
-        maxStableVUs: maxStableVUs,
-        breakingPoint: breakingPoint,
-        p95: p95,
-        errorRate: errorRate,
-        totalRequests: totalRequests,
-        failedRequests: failedRequests,
-        passRate: checks.passes + checks.fails > 0
-            ? (checks.passes / (checks.passes + checks.fails)) * 100
-            : 0,
-        status: breakingPoint.detected ? 'Breaking Point Found' : 'System Stable at Max Load'
     };
 }
 
@@ -171,12 +110,6 @@ if (stressData) {
     fs.copyFileSync(
         path.join(DIST_DIR, 'stress-data.json'),
         path.join(dashboardPublicData, 'stress-data.json')
-    );
-}
-if (adaptiveStressData) {
-    fs.copyFileSync(
-        path.join(DIST_DIR, 'adaptive-stress-data.json'),
-        path.join(dashboardPublicData, 'adaptive-stress-data.json')
     );
 }
 console.log('📁 Raw K6 data copied to dashboard');
