@@ -10,6 +10,7 @@ import {
     Legend,
     ArcElement,
 } from 'chart.js';
+import { useMemo } from 'react';
 import { Bar, Line, Doughnut } from 'react-chartjs-2';
 import type { DetailedMetrics } from '../types/k6.types';
 import type { TestHistory } from '../hooks/useK6Data';
@@ -80,7 +81,7 @@ export function ChartsSection({ metrics, history, type }: ChartsSectionProps) {
         ],
     };
 
-    const chartOptions = {
+    const chartOptions = useMemo(() => ({
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
@@ -88,9 +89,9 @@ export function ChartsSection({ metrics, history, type }: ChartsSectionProps) {
                 position: 'top' as const,
             },
         },
-    };
+    }), []);
 
-    const doughnutOptions = {
+    const doughnutOptions = useMemo(() => ({
         ...chartOptions,
         animation: {
             animateScale: true,
@@ -103,7 +104,7 @@ export function ChartsSection({ metrics, history, type }: ChartsSectionProps) {
                 position: 'bottom' as const,
             },
         },
-    };
+    }), [chartOptions]);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
