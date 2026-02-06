@@ -183,5 +183,21 @@
       "passRate": 0,
       "status": "Breaking Point Found"
     }
+  },
+  {
+    "id": 1770392182855,
+    "timestamp": "2026-02-06T15:36:22.855Z",
+    "performance": {
+      "totalRequests": 800,
+      "p95": 7.88537355,
+      "vus": 10,
+      "passRate": 0,
+      "health": "Healthy"
+    },
+    "stress": {
+      "maxVus": 200,
+      "p95": 6.418363149999999,
+      "status": "Stable"
+    }
   }
 ]
