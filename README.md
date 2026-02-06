@@ -54,7 +54,7 @@ npm run dashboard:serve
 
 **Then open:** http://localhost:3000 📊
 
-> **Note:** `test:all` takes ~20 minutes (performance + stress tests)
+> **Note:** `test:all` takes ~8 minutes (performance + stress tests)
 
 ---
 
@@ -78,8 +78,8 @@ cp .env.example .env
 Available environment variables:
 - `API_BASE_URL` - Petstore API endpoint
 - `DASHBOARD_PORT` - Dashboard server port
-- `DEFAULT_VUS` - Default virtual users
-- See `.env.example` for complete list
+- `DEFAULT_VUS` - Default virtual users (Default: 10)
+- `STRESS_VUS` - Stress test virtual users (Default: 30)
 
 ### Pre-commit Hooks (Husky)
 Automatically runs type-check before commits:
@@ -110,30 +110,30 @@ This runs:
 
 ### Run Tests
 
-#### Functional Performance Test
+#### Performance Test
+Simulates typical load (10 VUs) to verify functional correctness and baseline latency.
 ```bash
 npm test
 # OR
 k6 run dist/tests/performance.js
 ```
 
-#### 🔥 Adaptive Stress Test (Baseline + Breaking Point Discovery)
-Execute comprehensive stress testing that combines baseline stability testing with breaking point discovery:
+#### 🌊 Stress Test
+Executes a wave-pattern stress test to verify system stability and recovery.
+*Note: Configured to 30 VUs to be safe for Public API.*
 
 ```bash
 npm run test:stress
 ```
 
 **Test Phases:**
-1. **Baseline Stress** (Original): Warm-up → 200 VUs → Hold 2min
-2. **Adaptive Increments**: +50 VUs every 90s (250→300→350→400→450→500)
-3. **Breaking Point Detection**:
-   - Error rate > 10%, OR
-   - P95 latency > 5 seconds
+1. **Ramp Up**: 0 → 10 VUs
+2. **Hold**: 10 VUs
+3. **Peak Load**: 30 VUs (Saturation Test)
+4. **Recovery**: 30 → 10 VUs
+5. **Cool-down**: 10 → 0 VUs
 
-**Duration**: ~17 minutes total
-
-This answers: *"Is 200 VUs stable? What's the maximum load before degradation?"*
+**Duration**: ~8 minutes total
 
 #### Run All Tests + Process Results
 ```bash
@@ -143,7 +143,7 @@ npm run test:all
 This command:
 1. Builds tests and dashboard
 2. Runs performance tests
-3. Runs adaptive stress tests (baseline + breaking point)
+3. Runs stress tests
 4. Processes results for dashboard
 
 ## 📊 Dashboard & Reporting
@@ -160,12 +160,12 @@ This command:
 └────────┬────────┘
          ↓
 ┌─────────────────┐
-│ npm run         │  Generate adaptive-stress-data.json
-│  test:stress    │  (~17 minutes)
+│ npm run         │  Generate stress-data.json
+│  test:stress    │  (~8 minutes)
 └────────┬────────┘
          ↓
 ┌─────────────────┐
-│ npm run         │  Transform data & detect breaking point
+│ npm run         │  Transform data & update history
 │ process-data    │
 └────────┬────────┘
          ↓
@@ -185,49 +185,32 @@ npm run dashboard:serve
 
 **Open:** http://localhost:3000
 
-#### Dashboard Features (3 Tabs):
+#### Dashboard Features (2 Tabs):
 
-**1. Functional Performance Tab**
-- Total Requests & Throughput
-- Average Response Time
-- P95 Latency (with color-coded status)
-- Failure Rate & Check Pass Rate
-- Virtual Users count
-- Response Time Distribution (chart)
-- Historical P95 Trend (chart)
-- Request breakdown table
+**Features:**
+- **Sticky Header**: Navigation and Summary Cards always visible while scrolling.
+- **Dynamic Data**: Shows metrics relevant to the active test type.
 
-**2. Stress Test Tab** (Legacy)
-- Max VUs: 200
-- P95 Latency at peak
-- System status
+**1. Performance Test Tab**
+- Focus: Functional correctness & Baseline latency.
+- Metrics: Throughput, Avg Response, Failure Rate.
 
-**3. Adaptive Stress Tab** ⭐ (Breaking Point Discovery)
-- **Max VUs Tested**: Up to 500
-- **Max Stable VUs**: System capacity before degradation
-- **Breaking Point Status**: Detected/Stable
-- **Error Rate**: Request failure percentage
-- **P95 Latency**: Response time at each load level
-- **Breaking Point Reason**: High Error Rate OR High Latency
-- Degradation trend charts
-- Capacity planning insights
+**2. Stress Test Tab**
+- Focus: System stability under load (30 VUs).
+- Metrics: Peak VUs, P95 Latency at saturation, Recovery status.
 
 ### K6 Console Output
 - Real-time emoji-based logs
 - Standard K6 metrics (RPS, latency percentiles, error rates)
 
-### HTML Reports (Legacy)
-- **Functional Tests**: `dashboard.html`
-- **Stress Tests**: `stress-report.html`
+## 🐙 GitHub Actions CI/CD
 
-## 🦊 GitLab CI/CD
+This project includes a comprehensive `.github/workflows/k6-load-test.yml` pipeline:
 
-This project includes a comprehensive `.gitlab-ci.yml` pipeline:
-
-1. **Build Stage**: Compiles TypeScript using `node:18`
-2. **Test Stage**: Runs functional tests using `grafana/k6`
-3. **Stress Stage**: Runs chaos tests (allowed to fail) with artifact retention
-4. **Dashboard Stage**: Builds and deploys React dashboard
+1. **Build Stage**: Compiles TypeScript tests & React Dashboard.
+2. **Test Execution**: Runs selected K6 tests (Performance/Stress).
+3. **Data Processing**: Generates JSON reports.
+4. **Deployment**: Deploys the Dashboard to **GitHub Pages (`gh-pages` branch)**.
 
 ---
 
@@ -332,7 +315,7 @@ node --version
 
 ### Want to Re-run Only Stress Test?
 ```bash
-npm run test:stress    # 17 minutes
+npm run test:stress    # ~8 minutes
 npm run process-data   # Update dashboard
 # Dashboard auto-updates on refresh
 ```
@@ -343,15 +326,13 @@ npm run process-data   # Update dashboard
 
 ```
 k6-petstore/
-├── tests/              # K6 Performance Tests
-├── dashboard/          # React Dashboard
-├── shared/scripts/     # Data Processing
-├── dist/               # Build Output
-└── .gitlab-ci.yml      # CI/CD Pipeline
+├── tests/              # K6 Performance Tests & Configs
+├── dashboard/          # React Dashboard (Vite)
+├── shared/scripts/     # Data Processing Scripts
+├── dist/               # Build Output (Tests & Dashboard)
+├── .github/workflows/  # GitHub Actions
+└── .gitlab-ci.yml      # (Legacy) GitLab CI
 ```
 
 ---
-
-
-
 
