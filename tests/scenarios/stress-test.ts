@@ -10,7 +10,7 @@ export function handleSummary(data: any) {
     return generateSummary(data, {
         title: 'Wave Stress Test (Recovery Pattern) 🌊',
         filename: 'stress-report.html',  // Consistent with performance test naming
-        jsonFilename: 'dist/tests/adaptive-stress-data.json'  // Changed from stress-data.json
+        jsonFilename: 'dist/tests/stress-data.json'  // Fixed: Align with process-results.js expectations
     });
 }
 

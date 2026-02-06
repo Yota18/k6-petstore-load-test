@@ -65,17 +65,11 @@ export function useK6Data() {
         ? parseK6Data(stressData)
         : null;
 
-    const adaptiveStressMetrics: DetailedMetrics | null = adaptiveStressData
-        ? parseK6Data(adaptiveStressData)
-        : null;
-
     return {
         performanceData,
         stressData,
-        adaptiveStressData,
         performanceMetrics,
         stressMetrics,
-        adaptiveStressMetrics,
         history,
         loading,
         error,

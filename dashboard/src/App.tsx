@@ -87,7 +87,7 @@ function App() {
                                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                 }
                             `}
-                            disabled={!stressData}
+                        // disabled={!stressData} // Removed to fix UX issue
                         >
                             <AlertTriangle className="inline h-5 w-5 mr-2" />
                             Stress Test
