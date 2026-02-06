@@ -235,7 +235,7 @@ During framework development, several bugs were discovered in the Petstore API:
 - **Security Flaws**: 200 OK on invalid login credentials
 - **Validation Issues**: 200 OK on empty/invalid orders
 
-See **`BUG_REPORT.md`** for detailed analysis.
+
 
 ---
 
