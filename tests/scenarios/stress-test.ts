@@ -8,7 +8,7 @@ export const options = stressOptions;
 // 2. Custom Summary Handler for Stress Test
 export function handleSummary(data: any) {
     return generateSummary(data, {
-        title: 'Adaptive Stress Test - Breaking Point Discovery 🔥',
+        title: 'Wave Stress Test (Recovery Pattern) 🌊',
         filename: 'stress-report.html',  // Consistent with performance test naming
         jsonFilename: 'dist/tests/adaptive-stress-data.json'  // Changed from stress-data.json
     });
@@ -16,9 +16,9 @@ export function handleSummary(data: any) {
 
 // 3. Main Function
 export default function () {
-    // Custom Logger for Adaptive Stress Mode
+    // Custom Logger for Wave Stress Mode
     if (__VU === 1 && __ITER === 0) {
-        console.log("🔥 ADAPTIVE STRESS MODE - Baseline 200 VUs → Breaking Point Discovery (500 VUs)! 🔥");
+        console.log("🌊 WAVE STRESS MODE - Testing Recovery (0 → 250 → 500 → 250 → 0) 🌊");
     }
 
     // Reuse the critical workflow logic

@@ -20,6 +20,7 @@ export const stressOptions: Options = {
 
                 // Phase 4: Cool-down
                 { duration: '1m', target: 0 },     // Ramp-down 250 -> 0
+                { duration: '1m', target: 0 },     // Final Rest (Cool-down)
             ],
             gracefulRampDown: '30s',
         },
