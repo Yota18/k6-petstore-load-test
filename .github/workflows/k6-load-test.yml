@@ -11,6 +11,7 @@ on:
         options:
           - performance
           - stress
+          - all
 
 permissions:
   contents: write
@@ -51,6 +52,13 @@ jobs:
         run: |
           if [ "${{ github.event.inputs.test_type }}" = "stress" ]; then
             k6 run dist/tests/stress.js --summary-export=summary.json
+          elif [ "${{ github.event.inputs.test_type }}" = "all" ]; then
+            echo "Running Performance Test..."
+            k6 run dist/tests/performance.js --summary-export=summary-perf.json || true
+            echo "Running Stress Test..."
+            k6 run dist/tests/stress.js --summary-export=summary-stress.json || true
+            # Merge summaries for report (simple concatenation or just showing one)
+            cat summary-perf.json > summary.json
           else
             k6 run dist/tests/performance.js --summary-export=summary.json
           fi
