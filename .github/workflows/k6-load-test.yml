@@ -1,0 +1,68 @@
+name: K6 Load Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Type of load test to run'
+        required: true
+        default: 'performance'
+        type: choice
+        options:
+          - performance
+          - stress
+
+jobs:
+  k6-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build tests
+        run: npm run build:tests
+
+      - name: Setup K6
+        uses: grafana/setup-k6-action@v1
+
+      - name: Run K6 ${{ github.event.inputs.test_type }} test
+        run: |
+          if [ "${{ github.event.inputs.test_type }}" = "stress" ]; then
+            k6 run dist/tests/stress.js --out json=results.json --summary-export=summary.json || true
+          else
+            k6 run dist/tests/performance.js --out json=results.json --summary-export=summary.json || true
+          fi
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: k6-results-${{ github.event.inputs.test_type }}-${{ github.run_number }}
+          path: |
+            results.json
+            summary.json
+          retention-days: 30
+
+      - name: Display test summary
+        if: always()
+        run: |
+          echo "## K6 Load Test Results - ${{ github.event.inputs.test_type }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f summary.json ]; then
+            echo "### Metrics Summary" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
+            cat summary.json >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ No summary file generated" >> $GITHUB_STEP_SUMMARY
+          fi
