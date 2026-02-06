@@ -20,12 +20,13 @@ export function useK6Data() {
     useEffect(() => {
         async function fetchData() {
             try {
-                // Fetch current K6 raw data
+                // Fetch current K6 raw data using correct base path
+                const basePath = import.meta.env.BASE_URL;
                 const [perfRes, stressRes, adaptiveRes, historyRes] = await Promise.all([
-                    fetch('/data/performance-data.json').catch(() => null),
-                    fetch('/data/stress-data.json').catch(() => null),
-                    fetch('/data/adaptive-stress-data.json').catch(() => null),
-                    fetch('/data/history.json').catch(() => null),
+                    fetch(`${basePath}data/performance-data.json`).catch(() => null),
+                    fetch(`${basePath}data/stress-data.json`).catch(() => null),
+                    fetch(`${basePath}data/adaptive-stress-data.json`).catch(() => null),
+                    fetch(`${basePath}data/history.json`).catch(() => null),
                 ]);
 
                 if (perfRes?.ok) {
