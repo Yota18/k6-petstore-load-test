@@ -6,8 +6,8 @@ import { ChartsSection } from './components/ChartsSection';
 import { RequestTable } from './components/RequestTable';
 
 function App() {
-    const { performanceData, stressData, adaptiveStressData, performanceMetrics, stressMetrics, adaptiveStressMetrics, history, loading, error } = useK6Data();
-    const [activeTab, setActiveTab] = useState<'performance' | 'stress' | 'adaptive'>('performance');
+    const { performanceData, stressData, performanceMetrics, stressMetrics, history, loading, error } = useK6Data();
+    const [activeTab, setActiveTab] = useState<'performance' | 'stress'>('performance');
 
     if (loading) {
         return (
@@ -20,7 +20,7 @@ function App() {
         );
     }
 
-    if (error || (!performanceData && !stressData && !adaptiveStressData)) {
+    if (error || (!performanceData && !stressData)) {
         return (
             <div className="flex justify-center items-center h-screen">
                 <div className="text-center">
@@ -32,13 +32,13 @@ function App() {
         );
     }
 
-    const currentData = activeTab === 'performance' ? performanceData : activeTab === 'stress' ? stressData : adaptiveStressData;
-    const currentMetrics = activeTab === 'performance' ? performanceMetrics : activeTab === 'stress' ? stressMetrics : adaptiveStressMetrics;
+    const currentData = activeTab === 'performance' ? performanceData : stressData;
+    const currentMetrics = activeTab === 'performance' ? performanceMetrics : stressMetrics;
 
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
-            <nav className="bg-white shadow-sm border-b border-gray-200">
+            <nav className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex items-center">
@@ -61,46 +61,53 @@ function App() {
             </nav>
 
             <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-                {/* Tabs */}
-                <div className="mb-6 border-b border-gray-200">
-                    <nav className="-mb-px flex space-x-8">
-                        <button
-                            onClick={() => setActiveTab('performance')}
-                            className={`
+                {/* Sticky Controls Wrapper (Tabs + Summary Cards) */}
+                <div className="sticky top-16 z-40 bg-gray-50 pt-2 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 border-b border-gray-200/50 backdrop-blur-sm bg-gray-50/95">
+                    {/* Tabs */}
+                    <div className="mb-4 border-b border-gray-200">
+                        <nav className="-mb-px flex space-x-8">
+                            <button
+                                onClick={() => setActiveTab('performance')}
+                                className={`
                                 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
                                 ${activeTab === 'performance'
-                                    ? 'border-indigo-500 text-indigo-600'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                }
+                                        ? 'border-indigo-500 text-indigo-600'
+                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                    }
                             `}
-                            disabled={!performanceData}
-                        >
-                            <TrendingUp className="inline h-5 w-5 mr-2" />
-                            Performance Test
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('stress')}
-                            className={`
+                                disabled={!performanceData}
+                            >
+                                <TrendingUp className="inline h-5 w-5 mr-2" />
+                                Performance Test
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('stress')}
+                                className={`
                                 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
                                 ${activeTab === 'stress'
-                                    ? 'border-indigo-500 text-indigo-600'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                }
+                                        ? 'border-indigo-500 text-indigo-600'
+                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                    }
                             `}
-                        // disabled={!stressData} // Removed to fix UX issue
-                        >
-                            <AlertTriangle className="inline h-5 w-5 mr-2" />
-                            Stress Test
-                        </button>
-                    </nav>
+                            // disabled={!stressData} // Removed to fix UX issue
+                            >
+                                <AlertTriangle className="inline h-5 w-5 mr-2" />
+                                Stress Test
+                            </button>
+                        </nav>
+                    </div>
+
+                    {/* Summary Cards (Sticky with Tabs) */}
+                    {currentMetrics && (
+                        <div className="shadow-sm">
+                            <SummaryCards metrics={currentMetrics} type={activeTab} />
+                        </div>
+                    )}
                 </div>
 
-                {/* Content */}
+                {/* Content - Charts & Tables */}
                 {currentData && currentMetrics && (
                     <>
-                        {/* Summary Cards */}
-                        <SummaryCards metrics={currentMetrics} type={activeTab} />
-
                         {/* Charts */}
                         <ChartsSection metrics={currentMetrics} history={history} type={activeTab} />
 
