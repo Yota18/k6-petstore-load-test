@@ -44,12 +44,15 @@ jobs:
           mkdir -p dashboard/public/data
           git show gh-pages:data/history.json > dashboard/public/data/history.json || echo "No history.json found"
 
+      - name: Debug - List dist files
+        run: ls -R dist
+
       - name: Run K6 ${{ github.event.inputs.test_type }} test
         run: |
           if [ "${{ github.event.inputs.test_type }}" = "stress" ]; then
-            k6 run dist/tests/stress.js --out json=dist/tests/stress-data.json --summary-export=summary.json || true
+            k6 run dist/tests/stress.js --out json=dist/tests/stress-data.json --summary-export=summary.json
           else
-            k6 run dist/tests/performance.js --out json=dist/tests/performance-data.json --summary-export=summary.json || true
+            k6 run dist/tests/performance.js --out json=dist/tests/performance-data.json --summary-export=summary.json
           fi
 
       - name: Process test results for dashboard
