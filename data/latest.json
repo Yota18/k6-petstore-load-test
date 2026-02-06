@@ -1,7 +1,13 @@
 {
-  "id": 1770382194143,
-  "timestamp": "2026-02-06T12:49:54.143Z",
-  "performance": null,
+  "id": 1770385300131,
+  "timestamp": "2026-02-06T13:41:40.131Z",
+  "performance": {
+    "totalRequests": 700,
+    "p95": 75.88653910000001,
+    "vus": 10,
+    "passRate": 0,
+    "health": "Healthy"
+  },
   "stress": null,
   "adaptiveStress": {
     "maxVus": 30,
@@ -11,12 +17,12 @@
       "reason": "High Error Rate",
       "vus": 30,
       "errorRate": 20,
-      "p95": 9.34245575
+      "p95": 75.62926999999999
     },
-    "p95": 9.34245575,
+    "p95": 75.62926999999999,
     "errorRate": 20,
-    "totalRequests": 14820,
-    "failedRequests": 2964,
+    "totalRequests": 12820,
+    "failedRequests": 2564,
     "passRate": 0,
     "status": "Breaking Point Found"
   }
